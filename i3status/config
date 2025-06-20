@@ -3,7 +3,7 @@ general {
     colors = true
     color_good = "#ffffff"
     color_degraded = "#cccccc"
-    color_bad = "#ff0000"
+    color_bad = "#cccccc"
 }
 
 order += "cpu_usage"

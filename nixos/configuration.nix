@@ -1,6 +1,11 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
+
+# Meu configuration :D
+  # O mesmo arquivo desde 27/05/2025!
+   # - by Deive
+
 {
   config,
   lib,
@@ -11,6 +16,13 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./pkgs/pkgs.nix
+    ./HW/vaapi.nix
+    ./pkgs/thunar.nix
+    ./zram/zram.nix
+    ./discos/discos.nix
+    ./flakes/flakes.nix
+    #./tmp/
   ];
 
   # Bootloader.
@@ -18,8 +30,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
-  #  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest; # Kernel mainline padrão.
+  #boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest; # Kernel low-latency
 
   networking.hostName = "Genesis"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -54,12 +66,11 @@
 
   # WM
   services.xserver.windowManager.i3.enable = true;
-  services.xserver.windowManager.openbox.enable = true;
 
   # DE
-  services.xserver.desktopManager.mate.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
 
-  # DM
+  ## DM
   services.xserver.displayManager.lightdm.enable = true;
 
   # Configure keymap in X11
@@ -136,7 +147,7 @@
     exfat
     fuse
     intel-media-sdk
-    
+
     ## Acessorios
     fastfetch
     peazip
@@ -156,11 +167,10 @@
     git
     git-filter-repo
     xfce.mousepad
-    xfce.thunar
     qt6ct
     xdg-user-dirs
-    zsh
-  
+    mate.engrampa
+
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -192,38 +202,14 @@
 
   ### Minhas config nessa porra
 
-  ## Zsh
-# programs.zsh.enable = true;
-  
   ## Polkit
-  security.polkit.enable = true;
+  security.polkit.enable = true; # Ativa o Polkit.
 
-
-  ## Flakes
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-
-  # Outros troço do flakes
-  nix.nixPath = lib.mapAttrsToList (key: _: "${key}=flake:${key}") config.nix.registry;
-  nix.registry = lib.mapAttrs (_: value: {flake = value;}) (lib.filterAttrs (_: value: lib.isType "flake" value) inputs);
-  nix.settings.flake-registry = "";
-
-  ## discos
-  services = {
-    #udisks2.enable = true;
-    gvfs.enable = true;
-  };
 
   ## Lix
-  nix.package = pkgs.lixPackageSets.latest.lix;
+  nix.package = pkgs.lixPackageSets.latest.lix; # Ativar o Lix.
 
-  ## Zram
-  zramSwap = {
-    enable = true;
-    memoryPercent = 50;
-    algorithm = "lz4";
-  };
-
-  ## Steam Configurasoes
+  ## Configurações para a Steam
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -241,32 +227,13 @@
 
   ## Etc
 
-  # Configuração específica para gpu fudida | Vaapi: 1
-  nixpkgs.config.packageOverrides = pkgs: {
-    intel-vaapi-driver = pkgs.intel-vaapi-driver.override {enableHybridCodec = true;};
-  };
-
-  # Hardware e Gráficos | GPU & Vaapi: 1.1
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      intel-vaapi-driver # i965 
-      libvdpau-va-gl
-    ];
-  };
-
   # Variaveis de ambiente
   
   environment.sessionVariables = {
-    
-    ## Vaapi: 1.2
-    LIBVA_DRIVER_NAME = "i965"; # i965 é mais estável para Bay Trail
-    VDPAU_DRIVER = "va_gl"; # Melhor compatibilidade com VDPAU
 
     ## QT
     QT_QPA_PLATFORMTHEME = "qt6ct";
-    QT_STYLE_OVERRIDE = "gtk2";
+   # QT_STYLE_OVERRIDE = "gtk2";
 
     ## XDG USER DIRS
     XDG_DOCUMENTS_DIR = "$HOME/Documentos";
@@ -274,13 +241,8 @@
     XDG_MUSIC_DIR = "$HOME/Música";
     XDG_PICTURES_DIR = "$HOME/Imagens";
     XDG_VIDEOS_DIR = "$HOME/Vídeos";
+  
   };
-
-  # Parametros de Kernel
-  boot.kernelParams = [
-    "i915.enable_rc6=1" # Power management
-    "i915.enable_psr=0" # Desativa PSR (pode causar problemas em Bay Trail)
-  ];
 
   # Aliases
 
