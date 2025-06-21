@@ -95,7 +95,7 @@
   programs.git = {
     enable = true;
     userName = "HavanaHL";
-    userEmail = "x";
+    userEmail = "deivepython@protonmail.com";
 
     extraConfig.credential.helper = "store";
   };
