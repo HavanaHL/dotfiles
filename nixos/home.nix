@@ -13,7 +13,7 @@
     pkgs.gnome-font-viewer # visualizador ne pae
 
     ## Rice
-    pkgs.rofi-power-menu
+    pkgs.rofi-power-menu 
     pkgs.dunst
     pkgs.rofi
     pkgs.libnotify
@@ -57,7 +57,7 @@
 
     # IDE
     pkgs.vscodium
-    #pkgs.neovim
+    #pkgs.neovim	
     pkgs.zed-editor-fhs
 
     ## Mídia
@@ -67,7 +67,7 @@
 
     ## Xfce
     pkgs.xfce.xfce4-dockbarx-plugin
-    pkgs.xfce.tumbler
+    pkgs.xfce.tumbler   
     pkgs.xfce.xfce4-docklike-plugin
     pkgs.xfce.xfce4-cpugraph-plugin
     pkgs.xfce.xfce4-whiskermenu-plugin
@@ -75,7 +75,7 @@
     ## Sys
     pkgs.intel-vaapi-driver
     pkgs.polkit_gnome
-
+    
     ## Outros
     pkgs.nix-search-cli
     pkgs.networkmanagerapplet
@@ -95,10 +95,12 @@
   programs.git = {
     enable = true;
     userName = "HavanaHL";
-    userEmail = "X";
+    userEmail = "x";
 
     extraConfig.credential.helper = "store";
   };
 
   fonts.fontconfig.enable = true;
 }
+
+

@@ -16,13 +16,19 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./pkgs/pkgs.nix
-    ./HW/vaapi.nix
-    ./pkgs/thunar.nix
-    ./zram/zram.nix
-    ./discos/discos.nix
-    ./flakes/flakes.nix
-    #./tmp/
+    ./conf/pkgs/pkgs.nix
+    ./conf/HW/vaapi.nix
+    ./conf/pkgs/thunar.nix
+    ./conf/zram/zram.nix
+    ./conf/discos/discos.nix
+    ./conf/flakes/flakes.nix ## Ativação do flakes
+    ./conf/Environments/Aliases.nix
+    ./conf/Environments/VA.nix
+    ./conf/pkgs/Lix.nix
+    ./conf/fltpk/Flatpak.nix
+    ./conf/pkgs/Polkit.nix
+    ./conf/pkgs/Steam.nix
+    #./conf/tmp/
   ];
 
   # Bootloader.
@@ -32,6 +38,7 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest; # Kernel mainline padrão.
   #boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest; # Kernel low-latency
+
 
   networking.hostName = "Genesis"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -125,53 +132,7 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    
-    ## Multimedia
-    vlc
-    audacious
-    mpv
-    yt-dlp
-    ffmpeg
-
-    ## Jogos y games
-    steam
-
-    ## Sys
-    wget
-    intel-vaapi-driver
-    libvdpau-va-gl
-    polkit
-    gvfs
-    ntfs3g
-    exfat
-    fuse
-    intel-media-sdk
-
-    ## Acessorios
-    fastfetch
-    peazip
-    unrar
-    htop
-    btop
-    tmux
-    unzip
-    nwg-look
-    picom
-    xfce.tumbler
-    pkgs.gimp3
-    pavucontrol
-    wineWowPackages.stable
-    nvtopPackages.intel
-    playerctl
-    git
-    git-filter-repo
-    xfce.mousepad
-    qt6ct
-    xdg-user-dirs
-    mate.engrampa
-
-  ];
+  environment.systemPackages = with pkgs; [];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -200,58 +161,4 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  ### Minhas config nessa porra
-
-  ## Polkit
-  security.polkit.enable = true; # Ativa o Polkit.
-
-
-  ## Lix
-  nix.package = pkgs.lixPackageSets.latest.lix; # Ativar o Lix.
-
-  ## Configurações para a Steam
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
-
-  ## Flatpak
-  services.flatpak.enable = true;
-  xdg.portal = {
-    enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-    config.common.default = "*";
-  };
-
-  ## Etc
-
-  # Variaveis de ambiente
-  
-  environment.sessionVariables = {
-
-    ## QT
-    QT_QPA_PLATFORMTHEME = "qt6ct";
-   # QT_STYLE_OVERRIDE = "gtk2";
-
-    ## XDG USER DIRS
-    XDG_DOCUMENTS_DIR = "$HOME/Documentos";
-    XDG_DOWNLOAD_DIR = "$HOME/Downloads";
-    XDG_MUSIC_DIR = "$HOME/Música";
-    XDG_PICTURES_DIR = "$HOME/Imagens";
-    XDG_VIDEOS_DIR = "$HOME/Vídeos";
-  
-  };
-
-  # Aliases
-
-  environment.shellAliases = {
-    YTM = "yt-dlp -x --audio-format mp3 --audio-quality 320k --embed-thumbnail --convert-thumbnails jpg --ppa \"EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop='min(iw,ih):min(iw,ih)'\"";
-    YTMP = "yt-dlp -x --audio-format mp3 --audio-quality 320k --embed-thumbnail --convert-thumbnails jpg --ppa \"EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf crop='min(iw,ih):min(iw,ih)'\" --yes-playlist";
-    nxs = "sudo nixos-rebuild switch --flake path:/etc/nixos#Genesis";
-    hms = "home-manager switch --flake path:/etc/nixos#deive@Genesis";
-    nxc = "nix-store --gc";
-    fu = "sudo nix flake update --flake /etc/nixos";
-  };
 }
